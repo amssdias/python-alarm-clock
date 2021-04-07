@@ -1,35 +1,35 @@
-import tkinter as tk
 from datetime import datetime, timedelta
+import tkinter as tk
 
 
-def set_alarm(hour, minute, frame_alarm):
+def set_alarm(hour, minute, frame_alarm, label_set, lbl_time_missing):
 
     # Get entry from user
     hour = int(hour.get())
     minutes = int(minute.get()) if minute.get() else 00
     frame_alarm.grid(row=2, column=0)
-    LBL_ALARMED_SET = tk.Label(master=frame_alarm, text="Your alarm is set to: ")
+    label_set.pack_forget()
 
     if hour > 24:
-        LBL_ALARMED_SET['text'] = "Hour must be in 24 hour format. (00-23)"
-        LBL_ALARMED_SET.pack(side=tk.BOTTOM)
+        label_set['text'] = "Hour must be in 24 hour format. (00-23)"
+        label_set.pack(side=tk.BOTTOM)
         return
 
     if minutes > 59:
-        LBL_ALARMED_SET['text'] = "Minute must be less than 60. (0-59)"
-        LBL_ALARMED_SET.pack(side=tk.BOTTOM)
+        label_set['text'] = "Minute must be less than 60. (0-59)"
+        label_set.pack(side=tk.BOTTOM)
         return
 
-    LBL_ALARMED_SET['text'] = f"Alarm is set to: {str(hour).zfill(2)}:{str(minutes).zfill(2)}"
-    LBL_ALARMED_SET.pack(side=tk.BOTTOM)
+    label_set['text'] = f"Alarm is set to: {str(hour).zfill(2)}:{str(minutes).zfill(2)}"
+    label_set.pack(side=tk.BOTTOM)
 
     # Calculate time missing
     time_missing = calc_time_missing(hour, minutes)
 
-    LBL_TIME_MISSING = tk.Label(master=frame_alarm, text=f"Time Missing: {time_missing}")
-    LBL_TIME_MISSING.pack(side=tk.TOP)
+    lbl_time_missing['text'] = f"Time Missing: {time_missing}"
+    lbl_time_missing.pack(side=tk.TOP)
 
-    alarm_countdown(hour, minutes, LBL_TIME_MISSING)
+    alarm_countdown(hour, minutes, lbl_time_missing)
 
 
 def alarm_countdown(hour: int, minutes: int, label_time_missing):
@@ -50,9 +50,12 @@ def calc_time_missing(hour: int, minutes: int):
     '''
 
     time = datetime.now()
+
     if time.hour > hour:
-        time_missing = timedelta(hours=time.hour, minutes=time.minute, seconds=time.second) - \
-        timedelta(hours=hour, minutes=minutes)
+        # Calculate how much time missing to end the day
+        time_to_end_of_day = timedelta(hours=24) - timedelta(hours=time.hour, minutes=time.minute, seconds=time.second)
+        time_missing = time_to_end_of_day + timedelta(hours=hour, minutes=minutes)
+
     else:
         time_missing = timedelta(hours=hour, minutes=minutes) - \
         timedelta(hours=time.hour, minutes=time.minute, seconds=time.second)

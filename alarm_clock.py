@@ -1,5 +1,5 @@
-import tkinter as tk
 from datetime import datetime, timedelta
+import tkinter as tk
 
 from alarm_func import *
 
@@ -36,12 +36,14 @@ BTN_SET_ALARM = tk.Button(
     pady=10, 
     padx=8, 
     font=("Arial", 10),
-    command=lambda: set_alarm(ENT_HOUR, ENT_MIN, FRM_ALARMED_SET))
+    command=lambda: set_alarm(ENT_HOUR, ENT_MIN, FRM_ALARMED_SET, LBL_ALARMED_SET, LBL_TIME_MISSING))
 
 BTN_SET_ALARM.grid(sticky="nsew")
 
 # Layout to display time
 FRM_ALARMED_SET = tk.Frame(master=window, pady=10)
+LBL_ALARMED_SET = tk.Label(master=FRM_ALARMED_SET)
+LBL_TIME_MISSING = tk.Label(master=FRM_ALARMED_SET)
     
 
 window.mainloop()
