@@ -40,6 +40,10 @@ def alarm_countdown(hour: int, minutes: int, label_time_missing):
     time_missing = calc_time_missing(hour, minutes)
     label_time_missing['text'] = f"Time Missing: {time_missing}"
 
+    if time_missing.total_seconds() == 0:
+        label_time_missing['text'] = f"WAKE UP!"
+        return
+
     # Repeat
     label_time_missing.after(1000, lambda: alarm_countdown(hour, minutes, label_time_missing))
 
